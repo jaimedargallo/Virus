@@ -1,0 +1,40 @@
+El virus de una sola línea (bomba fork)
+
+La siguiente línea de código, en Bash, era capaz de bloquear o colgar un ordenador en versiones antiguas de Unix y muy posiblemente en algunos actuales con GNU/Linux, así que ten cuidado en ejecutarlo:
+
+    :(){ :|:& };:
+
+    bomb(){
+
+        bomb | bomb &
+
+    }
+    bomb
+
+Figura 5: Bomba fork en Bash en una sóla línea Bash y abajo en formato más legible
+
+Una bomba fork es un tipo de ataque cuyo objetivo es provocar una denegación de servicio, creando otros procesos (en concreto, a llamadas del sistema o system calls) de forma recursiva, colapsando la memoria del ordenador. Lo que hace especial este ataque, además de su extrema sencillez, es que demuestra la gran debilidad de los complejos informáticos actuales.
+
+La bomba fork de una sola línea es una obra maestra de la programación ofuscada, aquí tienes una brevísima descripción de su funcionamiento:
+
+    1. “:()” significa que está definiendo una función llamada “:” 
+
+    2. “{:|: &}” significa ejecutar la función “:” y enviar su salida a la función ”:” de nuevo y ejecutarla en segundo plano. 
+
+    3. Dentro de la sección del punto 2 ocurre lo siguiente:
+
+        • “:” carga otra copia de la función “:” en memoria 
+
+        • “|” y hace un “pipe” de su salida hacia … 
+
+        • “:” otra copia de la función “:” la cual se tiene que cargar en memoria 
+
+        • Por lo tanto, “:|:” carga dos copias de ':' cada vez que se llama a “:” 
+
+        • “&” mata a las funciones, si la primera “:” es destruida, todas las funciones que ya se han iniciada no serán eliminadas. 
+
+        • “}” fin desde el “:” inicial
+
+    4. “;” separador de los comandos 
+
+    5. “:” ejecuta la función por primera vez
